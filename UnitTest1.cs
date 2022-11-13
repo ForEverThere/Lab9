@@ -1,57 +1,48 @@
+using System;
+using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using System;
 
-namespace ELearn
+namespace WebJoke;
+
+public class Tests
 {
-    public class Tests
+    private IWebDriver _driver;
+    [SetUp]
+    public void Setup()
     {
-        [Test]
-        public void ICanWin()
-        {
-            IWebDriver driver = new ChromeDriver("D:\\WebDrivers\\Chrome");
-            driver.Url = "https://pastebin.com";
-            driver.FindElement(By.Id("postform-text")).SendKeys("Hello from WebDriver");
-            driver.FindElement(By.Id("select2-postform-expiration-container")).Click();
-            driver.FindElement(By.XPath("//li[text()='10 Minutes']")).Click();
-            driver.FindElement(By.Id("postform-name")).SendKeys("helloweb");
-            driver.FindElement(By.XPath("//button[@class='btn -big']")).Click();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Close();
-        }
+        _driver = new ChromeDriver();
+        _driver.Navigate().GoToUrl("https://www.qatarairways.com/en/homepage.html");
+        _driver.Manage().Window.Maximize();
+    }
 
-        [Test]
-        public void BringItOn()
-        {
-            IWebDriver driver = new ChromeDriver("D:\\WebDrivers\\Chrome");
-            driver.Url = "https://pastebin.com";
-
-            driver.FindElement(By.Id("postform-text")).SendKeys("git config --global user.name  \"New Sheriff in Town\" \ngit reset $(git commit - tree HEAD ^{ tree} -m \"Legacy code\") \ngit push origin master --force");
-
-            driver.FindElement(By.Id("select2-postform-format-container")).Click();
-            driver.FindElement(By.XPath("//li[text()='Bash']")).Click();
-
-            driver.FindElement(By.Id("select2-postform-expiration-container")).Click();
-            driver.FindElement(By.XPath("//li[text()='10 Minutes']")).Click();
-
-            driver.FindElement(By.Id("postform-name")).SendKeys("how to gain dominance among developers");
-
-            driver.FindElement(By.XPath("//button[@class='btn -big']")).Click();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
-
-            IWebElement syntaxHighlighting = driver.FindElement(By.XPath("//a[text()='Bash']"));
-            IWebElement codeFirstLine = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div[1]/div[2]/div[4]/div[2]/ol/li[1]/div/span[1]"));
-            IWebElement codeSecondLine = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div[1]/div[2]/div[4]/div[2]/ol/li[2]/div/span[1]"));
-            IWebElement codeThirdLine = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div[1]/div[2]/div[4]/div[2]/ol/li[3]/div/span[1]"));
-
-            Assert.AreEqual("how to gain dominance among developers - Pastebin.com", driver.Title);
-            Assert.AreEqual("Bash", syntaxHighlighting.Text);
-            Assert.AreEqual("git config", codeFirstLine.Text);
-            Assert.AreEqual("git reset", codeSecondLine.Text);
-            Assert.AreEqual("git push", codeThirdLine.Text);
-            
-            driver.Close();
-        }
+    [Test]
+    public void OpenSite()
+    {
+        _driver.FindElement((By.Id("cookie-close-accept-all"))).Click();
+        _driver.FindElement((By.XPath("//*[@id='bw-from']"))).SendKeys("Barcelona");
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[2]/div[1]/div[2]/span[1]/div/div[2]/div[3]/div/strong[1]"))).Click();
+        _driver.FindElement((By.XPath("//*[@id='bw-to']"))).SendKeys("Adana");
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[2]/div[2]/div[2]/span[1]/div/div[2]/div[3]/div/strong[1]"))).Click();
+        _driver.FindElement((By.XPath("//*[@id='tripType']"))).Click();
+        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
+        _driver.FindElement((By.XPath("//*[@id='onewayTrip']"))).Click();
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[4]/div[4]/div/div"))).Click();
+        Thread.Sleep(2000);
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[4]/div[4]/div/div[2]/div[2]/div[1]/table/tbody/tr[3]/td[6]"))).Click();
+        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[4]/div[4]/div/div[2]/div[3]/div[2]/button[2]"))).Click();
+        _driver.FindElement((By.XPath("//*[@id='flights-search-from']/div[11]/div[4]/button"))).Click();
+        Thread.Sleep(15000);
+        _driver.FindElement((By.XPath("/html/body/app-root/div/booking-flight-selection-page/div/booking-flight-result-card[1]/div/div/div[3]/div/div[1]/a"))).Click();
+        Thread.Sleep(2000);
+        _driver.FindElement((By.CssSelector("#fare-details-swiper-0001 > div > booking-fare-card:nth-child(1) > div > div:nth-child(5) > button"))).Click();
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        _driver.Close();
     }
 }
